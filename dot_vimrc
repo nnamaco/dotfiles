@@ -1,0 +1,111 @@
+set number
+set nowritebackup
+set nobackup
+set virtualedit=block
+set ambiwidth=double
+set wildmenu
+set encoding=utf-8
+scriptencoding utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8,euc-jp,iso-20220-jp
+set fileformats=unix,mac,dos
+set history=20
+filetype on
+filetype plugin indent on
+set clipboard=unnamed
+set title
+syntax on
+set autoread
+set noswapfile
+set confirm
+set showmatch
+set autoindent
+set tabstop=4
+set shiftwidth=4
+set ruler
+set expandtab
+set smartindent
+set ignorecase
+set smartcase
+set wrapscan
+set hlsearch
+set incsearch
+set laststatus=2
+set noshowmode
+
+augroup vimrcEx
+  autocmd!
+  autocmd BufReadPost *
+    \ if line("'\"") > 1 && line("'\"") <= line('$') |
+    \   exe "normal! g`\"" |
+    \ endif
+augroup END
+
+inoremap { {}<LEFT>
+inoremap [ []<LEFT>
+inoremap ( ()<LEFT>
+inoremap " ""<LEFT>
+inoremap ' ''<LEFT>
+map <Up> <Nop>
+map <Down> <Nop>
+map <Left> <Nop>
+map <Right> <Nop>
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+
+call plug#begin()
+Plug 'cocopon/iceberg.vim', {'do': 'cp colors/* ~/.vim/colors/'}
+Plug 'myrobo/smart_tabline.vim' 
+Plug 'itchyny/lightline.vim'
+Plug 'lambdalisue/fern.vim'
+Plug 'yuki-yano/fern-preview.vim'
+Plug 'lambdalisue/fern-git-status.vim'
+Plug 'lambdalisue/fern-hijack.vim'
+Plug 'w0rp/ale'
+Plug 'vimsence/vimsence'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-fugitive'
+call plug#end()
+
+nnoremap <C-f> :Fern . -reveal=% -drawer -toggle -width=40<CR>
+function! s:fern_settings() abort
+  nmap <silent> <buffer> p     <Plug>(fern-action-preview:toggle)
+  nmap <silent> <buffer> <C-p> <Plug>(fern-action-preview:auto:toggle)
+  nmap <silent> <buffer> <C-d> <Plug>(fern-action-preview:scroll:down:half)
+  nmap <silent> <buffer> <C-u> <Plug>(fern-action-preview:scroll:up:half)
+endfunction
+augroup fern-settings
+  autocmd!
+  autocmd FileType fern call s:fern_settings()
+augroup END
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+let g:lightline = {
+  \'colorscheme': 'powerline',
+  \'active': {
+  \  'left': [
+  \    ['mode', 'paste'],
+  \    ['ale', 'readonly', 'filename', 'modified']
+  \  ]
+  \},
+  \'component_function': {
+  \  'ale': 'ALEGetStatusLine',
+  \  'gitbranch': 'FugitiveHead'
+  \}
+  \}
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+
+colorscheme iceberg
+highlight Normal ctermbg=none
+highlight NonText ctermbg=none
+highlight LineNr ctermbg=none
+augroup AutoColor
+	autocmd!
+	autocmd Colorscheme * highlight TabLine ctermbg=none
+	autocmd Colorscheme * highlight TabLineSel ctermbg=none
+	autocmd Colorscheme * highlight TabLineFill cterm=none ctermbg=none
+augroup END
